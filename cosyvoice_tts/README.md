@@ -25,6 +25,10 @@
 - 增强的韵律和音质
 - 支持更精细的情感控制和口音调整
 
+### 交互体验
+- 模型下载支持进度条显示
+- 详细的操作提示和错误信息
+
 ## 环境配置
 
 ### 1. 安装Conda
@@ -71,10 +75,10 @@ from cosyvoice_tts import CosyVoiceTTS
 # 初始化实例
 tts = CosyVoiceTTS()
 
-# 下载所需模型
+# 下载所需模型（带进度条显示）
 # 推荐的主要模型
-# tts.download_model('CosyVoice2-0.5B')  # 推荐的高性能模型
-# tts.download_model('CosyVoice-300M')   # 轻量级模型
+tts.download_model('CosyVoice2-0.5B')  # 默认显示进度条
+# tts.download_model('CosyVoice-300M', show_progress=False)  # 不显示进度条
 
 # 其他可用模型
 # tts.download_model('CosyVoice-300M-SFT')

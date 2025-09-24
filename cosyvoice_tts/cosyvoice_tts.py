@@ -3,6 +3,7 @@ import os
 import torchaudio
 from cosyvoice.cli.cosyvoice import CosyVoice, CosyVoice2
 from cosyvoice.utils.file_utils import load_wav
+from tqdm import tqdm
 
 class CosyVoiceTTS:
     """
@@ -153,19 +154,20 @@ class CosyVoiceTTS:
             print(f"设置流式推理模式失败: {e}")
             return False
     
-    def download_model(self, model_name='CosyVoice2-0.5B', save_dir='pretrained_models'):
+    def download_model(self, model_name='CosyVoice2-0.5B', save_dir='pretrained_models', show_progress=True):
         """
-        下载预训练模型
+        下载预训练模型（带进度条）
         
         Args:
             model_name (str): 模型名称，支持'CosyVoice2-0.5B', 'CosyVoice-300M', 'CosyVoice-300M-SFT', 'CosyVoice-300M-Instruct', 'CosyVoice-ttsfrd'
             save_dir (str): 保存目录，默认为'pretrained_models'
+            show_progress (bool): 是否显示下载进度条，默认为True
         
         Returns:
             bool: 下载是否成功
         
         Notes:
-            - 此函数依赖modelscope库，请确保已安装
+            - 此函数依赖modelscope库和tqdm库，请确保已安装
             - 推荐优先下载CosyVoice2-0.5B以获得更好的性能
         """
         try:
@@ -175,7 +177,21 @@ class CosyVoiceTTS:
             os.makedirs(save_dir, exist_ok=True)
             
             print(f"开始下载模型: {model_name}")
-            snapshot_download(f'iic/{model_name}', local_dir=save_path)
+            
+            # 使用tqdm显示进度条
+            if show_progress:
+                # 创建进度条回调函数
+                def progress_callback(current, total):
+                    if total > 0:
+                        progress = current / total * 100
+                        print(f"\r下载进度: {progress:.2f}% ({current}/{total} MB)", end="")
+                
+                # 设置进度条
+                snapshot_download(f'iic/{model_name}', local_dir=save_path, progressbar=show_progress)
+                print()  # 换行，确保进度条完成后输出到下一行
+            else:
+                snapshot_download(f'iic/{model_name}', local_dir=save_path, progressbar=False)
+            
             print(f"模型下载成功，保存至: {save_path}")
             
             # 如果是ttsfrd资源，提供安装提示
@@ -188,8 +204,11 @@ class CosyVoiceTTS:
                 print("\n注意：如果不安装ttsfrd包，系统将默认使用WeTextProcessing")
             
             return True
-        except ImportError:
-            print("请先安装modelscope库: pip install modelscope")
+        except ImportError as e:
+            if 'tqdm' in str(e):
+                print("请先安装tqdm库: pip install tqdm")
+            else:
+                print("请先安装modelscope库: pip install modelscope")
             return False
         except Exception as e:
             print(f"模型下载失败: {e}")

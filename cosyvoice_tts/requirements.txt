@@ -4,13 +4,17 @@
 torch
  torchaudio
 
-# 模型下载和管理\modelscope
+# 模型下载和管理
+modelscope
 
 # 文本处理依赖
 pynini==2.1.5
 WeTextProcessing
 
-# 音频处理\sox
+# 进度条显示
+tqdm
+
+# 音频处理
 librosa
 
 # 其他可能需要的依赖
