@@ -1,0 +1,26 @@
+# CosyVoice文字转语音系统依赖包
+
+# 基础依赖
+torch
+ torchaudio
+
+# 模型下载和管理\modelscope
+
+# 文本处理依赖
+pynini==2.1.5
+WeTextProcessing
+
+# 音频处理\sox
+librosa
+
+# 其他可能需要的依赖
+numpy
+scipy
+pyyaml
+
+# 可选依赖（用于更好的性能）
+# 如果使用TensorRT优化
+# tensorrt
+
+# 注意：pynini建议使用conda安装以获得更好的兼容性
+# conda install -y -c conda-forge pynini==2.1.5
